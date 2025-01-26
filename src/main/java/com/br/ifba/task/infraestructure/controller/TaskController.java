@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.br.ifba.task.infraestructure.dto.TaskDto;
 import com.br.ifba.task.infraestructure.entity.Task;
 import com.br.ifba.task.infraestructure.service.TaskService;
 
@@ -19,8 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-
+import com.br.ifba.task.infraestructure.modelmapper.TaskMapper;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/task")
@@ -28,21 +28,24 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/findall")
-    public List<Task> findall(){
-        return taskService.findall();
+    public List<TaskDto> findall(){
+        List<Task> listTask = taskService.findall();
+        return TaskMapper.listExpenseToDto(listTask);
     }
     
     @PostMapping("/save")
-    public ResponseEntity<Task> save(@RequestBody Task task){
-       taskService.save(task);
-       return ResponseEntity.status(HttpStatus.CREATED).body(task);
+    public ResponseEntity<TaskDto> save(@RequestBody TaskDto dto){
+        Task task = TaskMapper.toTask(dto);
+        Task taskreturned = taskService.save(task);
+       return ResponseEntity.status(HttpStatus.CREATED).body(TaskMapper.toDto(taskreturned));
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<TaskDto> update(@PathVariable Long id, @RequestBody TaskDto dto) {
+        Task task = TaskMapper.toTask(dto);
 
         Task taskReturned = taskService.update(task, id);
         
-        return ResponseEntity.status(HttpStatus.OK).body(taskReturned);
+        return ResponseEntity.status(HttpStatus.OK).body(TaskMapper.toDto(taskReturned));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Optional<Task>> delete(@PathVariable Long id){
