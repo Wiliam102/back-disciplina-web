@@ -40,7 +40,7 @@ public class TaskService {
     public Task update(Task taskUpdate, Long id){
         // busacando a tarefa no banco e verificando se existe
         if(taskUpdate.getDescription().equals("") || taskUpdate.getDescription().equals(" ")){
-            throw new RuntimeException("A descricao nao pode ser vazia");
+            throw new TaskNotBlankException("A descricao nao pode ser vazia");
         }
         Optional<Task> task = taskRepository.findById(id);
         if(task!=null)
