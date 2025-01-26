@@ -6,5 +6,6 @@ import com.br.ifba.task.infraestructure.entity.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    boolean existsTaskByDescription(String description);
 
 }
