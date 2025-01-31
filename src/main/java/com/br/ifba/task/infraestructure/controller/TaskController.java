@@ -18,12 +18,14 @@ import com.br.ifba.task.infraestructure.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.br.ifba.task.infraestructure.modelmapper.TaskMapper;
 @RestController
+@CrossOrigin("*")
 @RequiredArgsConstructor
 @RequestMapping("/task")
 public class TaskController {
