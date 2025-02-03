@@ -3,6 +3,8 @@ package com.br.ifba.task.infraestructure.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,10 +34,10 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/findall")
-    public List<TaskDto> findall(){
-        // aqui estou retornando uma lista de tarefas mapeada para  dto
-        List<Task> listTask = taskService.findall();
-        return TaskMapper.listExpenseToDto(listTask);
+    public Page<TaskDto> findall(Pageable pageable){
+        // aqui estou retornando uma lista objetos paginados de tarefas mapeada para dto
+        Page<Task> taskPage = taskService.findall(pageable);
+        return taskPage.map(TaskMapper::toDto);
     }
     @PostMapping("/save")
     public ResponseEntity<TaskDto> save(@Valid @RequestBody TaskDto dto){

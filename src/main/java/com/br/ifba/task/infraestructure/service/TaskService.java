@@ -1,8 +1,9 @@
 package com.br.ifba.task.infraestructure.service;
 
 import java.util.Optional;
-import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.br.ifba.task.infraestructure.entity.Task;
@@ -17,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-
-    public List<Task> findall(){
-        return taskRepository.findAll();
+    
+    // retornando objetos paginados
+    public Page<Task> findall(Pageable pageable){
+        return taskRepository.findAll(pageable);
     }
 
     @Transactional
