@@ -1,6 +1,5 @@
 package com.br.ifba.task.infraestructure.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.br.ifba.task.infraestructure.dto.TaskDto;
 import com.br.ifba.task.infraestructure.entity.Task;
-import com.br.ifba.task.infraestructure.exception.TaskNotNullException;
 import com.br.ifba.task.infraestructure.service.TaskService;
 
 import jakarta.validation.Valid;
@@ -34,11 +32,11 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/findall")
-    public Page<TaskDto> findall(Pageable pageable){
-        // aqui estou retornando uma lista objetos paginados de tarefas mapeada para dto
+    public Page<TaskDto> findall(Pageable pageable) {
         Page<Task> taskPage = taskService.findall(pageable);
-        return taskPage.map(TaskMapper::toDto);
+        return taskPage.map(task -> TaskMapper.toDto(task)); // Chama um método `toDto`
     }
+    
     @PostMapping("/save")
     public ResponseEntity<TaskDto> save(@Valid @RequestBody TaskDto dto){
 
