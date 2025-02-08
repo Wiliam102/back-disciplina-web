@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.br.ifba.task.infraestructure.dto.PageDto;
 import com.br.ifba.task.infraestructure.dto.TaskDto;
 import com.br.ifba.task.infraestructure.entity.Task;
 import com.br.ifba.task.infraestructure.service.TaskService;
@@ -32,9 +34,12 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/findall")
-    public Page<TaskDto> findall(Pageable pageable) {
+    public ResponseEntity<PageDto<TaskDto>> findall(
+        @PageableDefault(size = 10, sort = "id") Pageable pageable) {  
         Page<Task> taskPage = taskService.findall(pageable);
-        return taskPage.map(task -> TaskMapper.toDto(task)); // Chama um método `toDto`
+        Page<TaskDto> dtoPage = taskPage.map(TaskMapper::toDto);
+        
+        return ResponseEntity.ok(PageDto.from(dtoPage));
     }
     
     @PostMapping("/save")
